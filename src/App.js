@@ -1,5 +1,6 @@
 import './App.css';
 import React, { Component } from 'react';
+import axios from 'axios';
 
 class App extends Component {
   state = {
@@ -8,10 +9,10 @@ class App extends Component {
   };
 
   onFileChange = (event) => {
-    this.setState({ selectedFile: event.target.files[0] }); // Fix 'event.target.files' instead of 'event.target.file'
+    this.setState({ selectedFile: event.target.files[0] });
   };
 
-  onFileUpload = () => {
+  onFileUpload = async () => {
     const formData = new FormData();
     formData.append(
       'demo file',
@@ -21,9 +22,19 @@ class App extends Component {
 
     // Call API or do other processing here
 
-    console.log(formData);
-    this.setState({ selectedFile: null });
-    this.setState({ fileUploadedSuccessfully: true });
+    const config = {
+      method: 'post',
+      mode: 'no-cors',
+      body: formData,
+    };
+
+    axios(
+      'https://vljk08onxj.execute-api.us-west-2.amazonaws.com/prod/file-upload',
+      config
+    ).then(() => {
+      this.setState({ selectedFile: null });
+      this.setState({ fileUploadedSuccessfully: true });
+    });
   };
 
   fileData = () => {
